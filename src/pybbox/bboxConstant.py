@@ -5,6 +5,7 @@ class BboxConstant:
     HTTP_METHOD_POST = "post"
     DEFAULT_LOCAL_IP = "192.168.1.254"
     DEFAULT_REMOTE_PORT = "443"
+    DEFAULT_BBOX_URL = "https://mabbox.bytel.fr"
     API_DEVICE = "device"
     API_HOSTS = "hosts"
     API_WAN = "wan"
