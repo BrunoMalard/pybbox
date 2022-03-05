@@ -102,10 +102,10 @@ class Bbox:
         """
         self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
         self.bbox_url.set_api_name(BboxConstant.API_DEVICE, "log")
-        api = BboxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_POST, None,
+        api = BboxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_GET, None,
                           self.bbox_auth)
         resp = api.execute_api_request()
-        return resp.json()[0]['device']['log']
+        return resp.json()[0]['log']
 
     """
     LAN API
