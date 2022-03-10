@@ -98,7 +98,7 @@ class Bbox:
     def get_logs(self):
         """
         Return the status logs of the box
-        :rtype: str
+        :rtype: list
         """
         self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
         self.bbox_url.set_api_name(BboxConstant.API_DEVICE, "log")
@@ -137,6 +137,39 @@ class Bbox:
             if ip == device['ipaddress']:
                 return device['active'] == 1
         return False
+
+    def conf_ip6(self, enable='1', ipadress=''):
+        """
+        Configure the IPv6 on the LAN
+        Enable or disable the IPv6 on the LAN and configure the IPv6 interface ID.
+        :param enable: Enable or disable IPv6 on the LAN.
+        :ipadress New LAN IPv6 address 
+        .. Todo :: Take in charge the ipadress
+        """
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE,
+                                  BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        self.bbox_url.set_api_name(BboxConstant.API_LAN, "ip6")
+        data = {'enable': enable}
+        api = BboxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_PUT, data,
+                          self.bbox_auth)
+        response = api.execute_api_request()
+        if response.status_code == 200:
+            print('ok')
+        else:
+            print(response.status_code)
+
+    def get_lan_ip(self):
+        """
+        LAN - Get Bbox LAN IP Information
+        This API returns ip configuration of the Bbox local Network.
+        :rtype: object
+        """
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        self.bbox_url.set_api_name(BboxConstant.API_LAN, "ip")
+        api = BboxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_GET, None,
+                          self.bbox_auth)
+        resp = api.execute_api_request()
+        return resp.json()[0]['lan']
 
     """
     USER ACCOUNT
