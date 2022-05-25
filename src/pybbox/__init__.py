@@ -172,6 +172,84 @@ class Bbox:
         return resp.json()[0]['lan']
 
     """
+    NAT PMP
+    """
+
+    def create_nat_rule(self,enable,description,protocol,ipaddress,internal_port,ipremote='',external_port=''):
+        """
+        NAT_PMP - Create a NAT-PMP rule
+        Create a NAT-PMP rule.
+        :param enable: 1=Enbable the rule
+                       0=Disable the rule
+        :type enable: int
+        :param description: The description for this rule (up to 48 characters).
+        :type description: str
+        :param protocol: tcp = TCP only.
+                        udp = UDP only.
+                        esp = ESP only.
+                        all = All of the above.
+        :type  protocol: str
+        :param ipadress: The local IP address where to forward packets.
+        :type ipadress: str
+        :param internal_port: The port where to forward packet.
+        :type internal_port: str
+        :param ipremote: (optional) The remote IP address where the packets are coming from.
+                         When not set packets are forwarded from any source.
+        :type ipremote: str
+        :param external_port: (optinal) The external port where the packets are coming from.
+                         When not set packets are forwarded from any port.
+        :type external_port: str
+        :return: True if HTTP status code = 201
+        :rtype: bool
+        """
+        token = self.get_token()
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        url_suffix = "rules?btoken={}".format(token)
+        data = {'enable': enable,'description': description,'protocol': protocol,'ipremote': ipremote,'external_port' : external_port, 'ipaddress': ipaddress,'internal_port':internal_port}
+        self.bbox_url.set_api_name(BboxConstant.API_NAT, url_suffix)
+        api = BboxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_POST, data,
+                          self.bbox_auth)
+        response = api.execute_api_request()
+        if response.status_code == 201:
+            return True
+        else:
+            return False
+
+    def delete_nat_rule(self,id):
+        """
+        NAT_PMP - Delete a NAT-PMP rule
+        Delete a NAT-PMP rule.
+        :param id: Rule id to delete
+        :type id: int
+        :return: True if Http code is 200 or 202
+        :rtypr: Bool
+        """
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        url_suffix = "rules/{}".format(id)
+        self.bbox_url.set_api_name(BboxConstant.API_NAT, url_suffix)
+        api = BboxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_DELETE, None,
+                          self.bbox_auth)
+        response = api.execute_api_request()
+        if response.status_code == 200 or response.status_code == 202:
+            return True
+        else:
+            return False
+
+    def get_all_nat_rules(self):
+        """
+        NAT_PMP - Get all NAT-PMP rules
+        Returns all existing NAT-PMP rules
+        :rtype: object
+        """
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        self.bbox_url.set_api_name(BboxConstant.API_NAT, "rules")
+        api = BboxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_GET, None,
+                          self.bbox_auth)
+        resp = api.execute_api_request()
+        return resp.json()[0]['nat']
+
+
+    """
     USER ACCOUNT
     """
 

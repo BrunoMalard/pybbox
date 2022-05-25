@@ -28,6 +28,8 @@ class BboxApiCall:
             self.call_method = requests.post
         elif http_method == BboxConstant.HTTP_METHOD_PUT:
             self.call_method = requests.put
+        elif http_method == BboxConstant.HTTP_METHOD_DELETE:
+            self.call_method = requests.delete
 
     def execute_api_request(self):
         """
@@ -49,7 +51,7 @@ class BboxApiCall:
             else:
                 resp = self.call_method(self.api_url.get_url(),
                                         data=self.parameters)
-        if resp.status_code != 200:
+        if resp.status_code != 200 and resp.status_code != 201:
             # This means something went wrong.
             raise Exception('Error {} with request {}'.format(
                 resp.status_code, self.api_url.get_url()))
